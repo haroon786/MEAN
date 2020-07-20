@@ -15,6 +15,7 @@ export class PostCreateComponent
   constructor(private postservice:PostsService){}
   onAddPost(form:NgForm)
     {
+      console.log(form.value.title,form.value.content)
      this.postservice.addPost(form.value.title,form.value.content)
      form.reset();
     }
