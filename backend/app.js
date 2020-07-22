@@ -1,8 +1,19 @@
 const express=require('express');
-//const bodyParser=require("body-parser");
+const Postmodal=require('./modal/post');
+const bodyParser=require("body-parser");
+const mongoose=require('mongoose');
 const app=express();
 
-//app.use(bodyParser.json());
+mongoose.connect("mongodb+srv://Haroon:n58ihxuME0p94thz@mean-db-cluster.qdumj.mongodb.net/mean-db-cluster?retryWrites=true&w=majority",{useNewUrlParser: true,useUnifiedTopology: true })
+.then(()=>{
+  console.log("database connected");
+ })
+  .catch(()=>
+  {
+      console.log("error")
+  })
+
+app.use(bodyParser.json());
 
 app.use((res,req,next)=>{
     req.setHeader("Access-Control-Allow-Origin","*");
@@ -12,10 +23,15 @@ app.use((res,req,next)=>{
                 "GET,POST,PATCH,DELETE,OPTIONS");
                 next();
 })
+//WKtRX1heWC4dfRFG
 app.post("/api/posts/",(req,res,next)=>
 {
-  const post=req.body
-  console.log(post);
+  //const post=req.body
+  const postmodal=new Postmodal({
+    title:req.body.title,
+    content:req.body.content
+  })
+  console.log(postmodal);
   res.status(201).json({
     message:"post added successfully"
   });
