@@ -4,7 +4,7 @@ const bodyParser=require("body-parser");
 const mongoose=require('mongoose');
 const app=express();
 
-mongoose.connect("mongodb+srv://Haroon:n58ihxuME0p94thz@mean-db-cluster.qdumj.mongodb.net/mean-db-cluster?retryWrites=true&w=majority",{useNewUrlParser: true,useUnifiedTopology: true })
+mongoose.connect("mongodb+srv://Haroon:n58ihxuME0p94thz@mean-db-cluster.qdumj.mongodb.net/mean-db?retryWrites=true&w=majority",{useNewUrlParser: true,useUnifiedTopology: true })
 .then(()=>{
   console.log("database connected");
  })
@@ -24,41 +24,43 @@ app.use((res,req,next)=>{
                 next();
 })
 //WKtRX1heWC4dfRFG
-app.post("/api/posts/",(req,res,next)=>
-{
-  //const post=req.body
-  const postmodal=new Postmodal({
-    title:req.body.title,
-    content:req.body.content
-  })
-  console.log(postmodal);
-  res.status(201).json({
-    message:"post added successfully"
+app.post("/api/posts", (req, res, next) => {
+  const post = new Postmodal({
+    title: req.body.title,
+    content: req.body.content
   });
-})
-app.use("/api/Posts",(req,res,next)=>
+    post.save().then(createdPost => {
+    res.status(201).json({
+      message: "Post added successfully",
+      postId: createdPost._id
+    });
+  });
+});
+
+app.get("/api/Posts",(req,res,next)=>
 {
-      const Posts=[
-        {
-          id:"12",
-          title:"First",
-          content:"First Content"
-        },
-        {
-          id:"12",
-          title:"Second",
-          content:"Second Content"
-        },
-        {
-          id:"12",
-          title:"Third",
-          content:"Third Content"
-        }
-      ];
+  Postmodal.find().then(documents=>
+    {
+      console.log(documents)
+
       res.json({
             message:"from express server",
-            posts:Posts
+            posts:documents
       })
+    })
 })
+app.delete("/api/Posts/:id",(req,res,next)=>{
+  Postmodal.deleteOne({_id:req.params.id})
+  .then(result=>{
+    console.log(result);
+    res.status(200).json(
+      {
+        message:"successfully Deleted"
+      }
+    );
+  })
+
+
+});
 
 module.exports=app
