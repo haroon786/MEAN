@@ -13,6 +13,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import { PostListComponent } from './posts/post-list/post-list.component';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {HttpClientModule} from '@angular/common/http';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 @NgModule({
   declarations: [
     AppComponent,PostCreateComponent, HeaderComponent, PostListComponent
@@ -27,7 +28,8 @@ import {HttpClientModule} from '@angular/common/http';
     MatToolbarModule,
     MatExpansionModule,
     HttpClientModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatProgressSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

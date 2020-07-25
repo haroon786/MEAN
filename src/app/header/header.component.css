@@ -1,5 +1,15 @@
 ul{
   list-style:none;
   padding:0;
-  
+
+}
+a
+{
+  text-decoration: none;
+  color: white;
+}
+/* //will push everything to right */
+.spacer
+{
+  flex:1 1 auto;
 }
