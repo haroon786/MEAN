@@ -14,6 +14,7 @@ import { PostListComponent } from './posts/post-list/post-list.component';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {HttpClientModule} from '@angular/common/http';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     AppComponent,PostCreateComponent, HeaderComponent, PostListComponent
@@ -29,7 +30,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatExpansionModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    ReactiveFormsModule 
   ],
   providers: [],
   bootstrap: [AppComponent]

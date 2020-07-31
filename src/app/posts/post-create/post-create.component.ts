@@ -1,8 +1,9 @@
 import {Component,EventEmitter,Output, OnInit} from '@angular/core';
 import { IPost } from '../post-modal/post';
-import { NgForm } from '@angular/forms';
+import { NgForm, FormGroup, FormControl, Validators } from '@angular/forms';
 import { PostsService } from '../PostService/posts.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import  {mimeType} from '../post-create/mime-type.validator';
 @Component({
   selector:'app-post-create',
   templateUrl:'./post-create.component.html',
@@ -10,13 +11,13 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 })
 export class PostCreateComponent implements OnInit
 {
-    enteredTitle="";
-    enteredContent="";
      postcreated:any;
      private mode='create';
      private postId:string;
      post:IPost;
+     imagePreview:any;
      isLoading=false;
+     form:FormGroup;
 
   constructor(private postservice:PostsService,private route:ActivatedRoute)
   {
@@ -25,6 +26,15 @@ export class PostCreateComponent implements OnInit
 
   ngOnInit()
   {
+    this.form=new FormGroup({
+      'title':new FormControl(null,{
+        validators:[Validators.required,Validators.minLength(3)]
+      }),
+      'content':new FormControl(null,{
+        validators:[Validators.required]
+      }),
+      image:new FormControl(null,{validators:[Validators.required],asyncValidators:[mimeType]})
+    });
     this.route.paramMap.subscribe((parammap:ParamMap)=>
     {
       if(parammap.has('postId'))
@@ -35,7 +45,8 @@ export class PostCreateComponent implements OnInit
           this.postservice.getSinglePost(this.postId).subscribe(postdata=>
             {
               this.isLoading=false
-              this.post={id:postdata._id,title:postdata.title,content:postdata.content}
+              this.post={id:postdata._id,title:postdata.title,content:postdata.content,imagePath:null}
+              this.form.setValue({'title':this.post.title,'content':this.post.content})
             })
         }
         else
@@ -46,18 +57,29 @@ export class PostCreateComponent implements OnInit
     })
 
   }
-
-  onSavePost(form:NgForm)
+  onImagePicked(event:Event)
+  {
+      const file=(event.target as HTMLInputElement).files[0];
+      this.form.patchValue({image:false});
+      this.form.get('image').updateValueAndValidity();
+      const reader=new FileReader();
+      reader.onload=()=>
+      {
+        this.imagePreview=reader.result;
+      };
+      reader.readAsDataURL(file);
+  }
+  onSavePost()
     {
             if(this.mode=="create")
             {
-            console.log(form.value.title,form.value.content)
-          this.postservice.addPost(form.value.title,form.value.content)
-          form.reset();
+               console.log(this.form.value.title,this.form.value.content)
+               this.postservice.addPost(this.form.value.title,this.form.value.content,this.form.value.image)
+               this.form.reset();
             }
             else
             {
-                this.postservice.updatePost(this.postId,form.value.title,form.value.content)
+                this.postservice.updatePost(this.postId,this.form.value.title,this.form.value.content)
             }
 
     }
