@@ -1,5 +1,6 @@
 const express=require("express");
 const Postmodal = require("../modal/post");
+const userRoutes=require("../routes/user");
 const router=express.Router();
 const multer=require("multer");
 
@@ -45,11 +46,17 @@ router.post("",multer({storage:storage}).single("image"), (req, res, next) => {
     });
   });
 });
-router.put("/:id", (req, res, next) => {
+router.put("/:id",multer({storage:storage}).single("image"), (req, res, next) => {
+  let imagePath=req.body.imagePath;
+  if(req.file){
+    const url=req.protocol + "://" + req.get("host");
+    imagePath=url+ "/images" + req.file.filename
+  }
   const post = new Postmodal({
     _id: req.body.id,
     title: req.body.title,
     content: req.body.content,
+    imagePath:imagePath
   });
   post.updateOne({ _id: req.params.id }, post).then((result) => {
     console.log(`updated`);
@@ -57,20 +64,24 @@ router.put("/:id", (req, res, next) => {
   });
 });
 router.get("", (req, res, next) => {
-  Postmodal.find().then((documents) => {
-    console.log(documents);
-
-    res.json({
-      message: "from express server",
-      posts: documents,
-    });
-  });
-});
-router.delete("/:id", (req, res, next) => {
-  Postmodal.deleteOne({ _id: req.params.id }).then((result) => {
-    console.log(result);
+  const pageSize=+req.query.pageSize;
+  const currentPage=+req.query.page;
+  const postquery=Postmodal.find();
+  let fetchedPosts;
+  if(pageSize && currentPage)
+  {
+    postquery.skip(pageSize*(currentPage-1))
+    .limit(pageSize);
+  }
+  postquery.then(documents=>{
+    fetchedPosts=documents
+    return Postmodal.countDocuments();
+  })
+    .then(count=>{
     res.status(200).json({
-      message: "successfully Deleted",
+      message: "from express server",
+      posts: fetchedPosts,
+      maxPost:count
     });
   });
 });
@@ -89,5 +100,15 @@ router.get("/:id",(req,res)=>
     }
     )
 })
+router.delete("/:id", (req, res, next) => {
+  Postmodal.deleteOne({ _id: req.params.id }).then((result) => {
+    console.log(result);
+    res.status(200).json({
+      message: "successfully Deleted",
+    });
+  });
+});
+
+
 
 module.exports=router
