@@ -7,7 +7,7 @@
     <mat-error *ngIf="emailInput.invalid">please enter valid email</mat-error>
   </mat-form-field>
   <mat-form-field>
-    <input matInput type="password" name="password" #passwordInput placeholder="Password" required/>
+    <input matInput type="password"  ngModel name="password"  #passwordInput="ngModel"  placeholder="Password" required/>
     <mat-error *ngIf="passwordInput.invalid">please enter content</mat-error>
   </mat-form-field>
    <button mat-raised-button type="submit">Login</button>
