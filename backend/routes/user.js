@@ -62,7 +62,7 @@ router.post("/login",(req,res,next)=>{
       "secretly-created-json-token",{expiresIn:"1h"});
       res.status(201).json({
         token:token
-      })
+      });
     })
     .catch(err=>
       {
