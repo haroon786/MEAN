@@ -53,12 +53,10 @@ export class PostsService {
     postData.append("content", content);
     postData.append("image", image, title);
     console.log("dddd post" + postData);
-    this.httpclient
-      .post<{ message: string; post: IPost }>(
-        "http://localhost:3000/api/posts",
-        postData
-      )
+    this.httpclient.post<{ message: string; post: IPost }>("http://localhost:3000/api/posts",postData)
       .subscribe((responsedata) => {
+
+        console.log(responsedata);
 
         this.route.navigate(["/"]);
       });
@@ -67,7 +65,7 @@ export class PostsService {
     console.log(id);
    return this.httpclient
       .delete("http://localhost:3000/api/posts/" + id)
-    
+
   }
   updatePost(id: string, title: string, content: string, image: File | string) {
     let postdata: IPost | FormData;
