@@ -54,7 +54,7 @@ router.post("/login",(req,res,next)=>{
       {
         return res.status(401).json({
           message:"Auth Failed"
-        });
+        })
       }
 
     console.log("ddddd"+fetchedUser)
