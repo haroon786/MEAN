@@ -4,7 +4,8 @@ module.exports=(req,res,next)=>{
 
   try{
   const token=req.headers.authorization.split(" ")[1];
-  jwt.verify(token,"secretly-created-json-token");
+  const decodedToken=jwt.verify(token,"secretly-created-json-token");
+  req.userData={email:decodedToken.email,userId:decodedToken.userId};
   next();
   }
   catch(error)

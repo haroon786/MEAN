@@ -15,7 +15,7 @@ export class PostsService {
   constructor(private httpclient: HttpClient, private route: Router) {}
 
   getSinglePost(postId: string) {
-    return this.httpclient.get<{ _id: string; title: string; content: string;imagePath:string}>(
+    return this.httpclient.get<{ _id: string; title: string; content: string;imagePath:string,creator:string}>(
       "http://localhost:3000/api/posts/" + postId
     );
   }
@@ -25,12 +25,13 @@ export class PostsService {
       .get<{ message: string; posts: any;maxPosts:number }>("http://localhost:3000/api/posts"+ queryParams)
       .pipe(
         map((postdata) => {
-          return {post:postdata.posts.map((post) => {
+          return {post:postdata.posts.map(post=> {
             return {
               title: post.title,
               content: post.content,
               id: post._id,
               imagePath: post.imagePath,
+              creator:post.creator
 
             };
           }),
@@ -84,7 +85,8 @@ export class PostsService {
         id:id,
         title:title,
         content:content,
-        imagePath:image
+        imagePath:image,
+        creator:null
       };
     }
 

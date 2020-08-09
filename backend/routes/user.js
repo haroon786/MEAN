@@ -62,7 +62,8 @@ router.post("/login",(req,res,next)=>{
       "secretly-created-json-token",{expiresIn:"1h"});
       res.status(201).json({
         token:token,
-        expiresIn:3600
+        expiresIn:3600,
+        userId:fetchedUser._id
       });
     })
     .catch(err=>

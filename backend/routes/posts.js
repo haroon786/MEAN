@@ -34,8 +34,11 @@ router.post("",chekAuth,multer({storage:storage}).single("image"), (req, res, ne
   const post = new Postmodal({
     title: req.body.title,
     content: req.body.content,
-    imagePath:url+ "/images/" + req.file.filename
+    imagePath:url+ "/images/" + req.file.filename,
+    creator:req.userData.userId
   });
+  console.log(req.userData);
+  return res.status(200).json({});
   post.save().then((createdPost) => {
     res.status(201).json({
       message: "Post added successfully",
@@ -56,11 +59,21 @@ router.put("/:id",chekAuth,multer({storage:storage}).single("image"), (req, res,
     _id: req.body.id,
     title: req.body.title,
     content: req.body.content,
-    imagePath:imagePath
+    imagePath:imagePath,
+    creator:req.userData.userId
   });
-  post.updateOne({ _id: req.params.id }, post).then((result) => {
+  post.updateOne({ _id: req.params.id,creator:req.userData.userId}, post).then((result) => {
     console.log(`updated`);
-    res.status(200).json({ message: "updated successfully" });
+    if(result.nModified>0)
+    {
+      res.status(200).json({message:"update successfully"});
+     }
+     else
+     {
+       res.status(401).json({
+         message:"unsccessfull update"
+       })
+     }
   });
 });
 router.get("", (req, res, next) => {
@@ -101,10 +114,16 @@ router.get("/:id",(req,res)=>
     )
 })
 router.delete("/:id",chekAuth, (req, res, next) => {
-  Postmodal.deleteOne({ _id: req.params.id }).then((result) => {
-    console.log(result);
-    res.status(200).json({
-      message: "successfully Deleted",
+  Postmodal.deleteOne({ _id: req.params.id ,creator:req.userData.userId}).then((result) => {
+
+    if(result.n>0)
+    {
+      res.status(200).json({
+        message: "Deletion successfully",
+      });
+    }
+    res.status(401).json({
+      message: "Not Authorized to Delete",
     });
   });
 });

@@ -34,7 +34,7 @@ export class PostCreateComponent implements OnInit {
         validators: [Validators.required],
       }),
       image: new FormControl(null, {
-       
+
         asyncValidators: [mimeType],
       }),
     });
@@ -49,7 +49,8 @@ export class PostCreateComponent implements OnInit {
             id: postdata._id,
             title: postdata.title,
             content: postdata.content,
-            imagePath: postdata.imagePath
+            imagePath: postdata.imagePath,
+            creator:postdata.creator
           };
           this.form.setValue({
             title: this.post.title,

@@ -4,4 +4,5 @@ export interface IPost
   title:string;
   content:string;
   imagePath:string;
+  creator:string;
 }

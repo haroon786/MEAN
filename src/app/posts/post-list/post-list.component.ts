@@ -13,6 +13,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 export class PostListComponent implements OnInit,OnDestroy {
 
   pageSizeOptions=[1,2,5,10];
+  userId:string;
   postPerPage=2;
   totalPost=0;
   posts:IPost[]=[];
@@ -28,6 +29,7 @@ export class PostListComponent implements OnInit,OnDestroy {
   {
     console.log(`in ngOninit`)
     this.postservice.getPost(this.postPerPage,this.currentPage)
+    this.userId=this.authservice.getUserId()
    this.postsub$=this.postservice.getUpdatedPosts().subscribe((postData: {posts:IPost[],postcount:number})=>{
     this.isLoading=false;
     this.totalPost=postData.postcount;
@@ -37,6 +39,8 @@ export class PostListComponent implements OnInit,OnDestroy {
    this.authservicesub$=this.authservice.getAuthStatusListener().subscribe(isauthenticated=>
     {
         this.isauthenticate=isauthenticated
+        this.userId=this.authservice.getUserId()
+
     });
 }
 onChangedPage(pageData:PageEvent)
