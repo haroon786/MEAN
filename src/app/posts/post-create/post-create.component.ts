@@ -22,7 +22,7 @@ export class PostCreateComponent implements OnInit {
     private postservice: PostsService,
     private route: ActivatedRoute
   ) {
-    console.log(`post  create constructor`);
+    console.log(`postrr  create constructor`);
   }
 
   ngOnInit() {
