@@ -1,5 +1,5 @@
 const User=require("../modal/user");
-const bcrypt=require("bcrypt");
+const bcrypt=require("bcryptjs");
 const jwt=require("jsonwebtoken");
 
 
@@ -56,7 +56,7 @@ exports.userLogin=(req,res,next)=>{
 
     console.log("ddddd"+fetchedUser)
     const token=jwt.sign({email:fetchedUser.email,userId:fetchedUser._id},
-      "secretly-created-json-token",{expiresIn:"1h"});
+      process.env.JWT_KEY,{expiresIn:"1h"});
       res.status(201).json({
         token:token,
         expiresIn:3600,

@@ -8,7 +8,7 @@ const app = express();
 const path = require("path");
 mongoose
   .connect(
-    "mongodb+srv://Haroon:n58ihxuME0p94thz@mean-db-cluster.qdumj.mongodb.net/mean-db?retryWrites=true&w=majority",
+    "mongodb+srv://Haroon:"+process.env.MONGO_ATLAS_PW+"@mean-db-cluster.qdumj.mongodb.net/mean-db?retryWrites=true&w=majority",
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => {
